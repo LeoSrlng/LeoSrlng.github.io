@@ -4,17 +4,18 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const router = require("./Routes/router.js");
 
-app.get("/", (req, res) => {
-	res.sendFile(__dirname + "/index.html");
-});
+app.use("/", router);
 
 io.on("connection", (socket) => {
 	console.log("a user connected");
+
 	socket.on("chat message", (msg) => {
 		console.log("message: " + msg);
 		io.emit("chat message", msg);
 	});
+
 	socket.on("disconnect", () => {
 		console.log("user disconnected");
 	});
