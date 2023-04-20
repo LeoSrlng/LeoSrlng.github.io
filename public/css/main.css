@@ -1,0 +1,126 @@
+body {
+	margin: 0;
+	padding-bottom: 3rem;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#formChat {
+	background: rgba(0, 0, 0, 0.15);
+	padding: 0.25rem;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: flex;
+	height: 3rem;
+	box-sizing: border-box;
+	backdrop-filter: blur(10px);
+}
+
+#inputChat {
+	border: none;
+	padding: 0 1rem;
+	flex-grow: 1;
+	border-radius: 2rem;
+	margin: 0.25rem;
+}
+
+#inputChat:focus {
+	outline: none;
+}
+
+#formChat > button {
+	background: #333;
+	border: none;
+	padding: 0 1rem;
+	margin: 0.25rem;
+	border-radius: 3px;
+	outline: none;
+	color: #fff;
+}
+
+#messages {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#messages > li {
+	padding: 0.5rem 1rem;
+}
+
+#messages > li:nth-child(odd) {
+	background: #efefef;
+}
+
+body.logged-out {
+	background: rgb(223, 223, 223);
+}
+body.logged-out section#Chat {
+	filter: blur(5px);
+	-webkit-filter: blur(5px);
+}
+body.logged-out section#Login {
+	opacity: 1;
+}
+
+section#Login {
+	transition: all 0.5s;
+	opacity: 0;
+	top: 45%;
+	text-align: center;
+	position: absolute;
+	width: 100%;
+}
+section#Login label[for="inputLogin"] {
+	display: block;
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+section#Login input#inputLogin {
+	font-size: 25px;
+	text-align: center;
+	padding: 5px;
+	border: 5px solid rgb(158, 158, 158);
+}
+section#Login input#inputLogin:focus {
+	outline: none;
+}
+section#Login button {
+	background: #e67e22;
+	border: none;
+	padding: 5px 80px;
+	color: white;
+	font-size: 20px;
+	margin-top: 20px;
+	cursor: pointer;
+}
+
+section#Chat #messages li div span.username {
+	padding: 6px 10px;
+	margin-right: 5px;
+	color: white;
+	background: #e67e22;
+	border-radius: 5px;
+	width: fit-content;
+}
+
+section#Chat #messages li div {
+	display: flex;
+	flex-direction: column;
+}
+
+section#Chat #messages li.logout {
+	background: #e5a6a6;
+}
+section#Chat #messages li.login {
+	background: #a8e5a6;
+}
+section#Chat #messages li span.info {
+	display: inline-block;
+	padding: 3px 10px;
+	margin-right: 5px;
+	color: white;
+	background: #e67e22;
+	border-radius: 5px;
+}

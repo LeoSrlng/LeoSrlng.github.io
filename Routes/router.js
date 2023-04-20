@@ -1,36 +1,18 @@
 const express = require("express");
-// const HomeController = require("../controllers/home.js");
-// const SalonController = require("../controllers/salon.js");
+const { HomeControGet, HomeControPost } = require("../controllers/home.js");
+const SalonController = require("../controllers/salon.js");
 
 const router = express.Router();
 
-// router.use(function num(req, res, next) {
-// 	let NumSalon = Math.floor(Math.random() * 9999);
-// 	res.locals.NumSalon = NumSalon;
-// 	next();
-// });
+router.use(function num(req, res, next) {
+	let NumSalon = Math.floor(Math.random() * 9999);
+	res.locals.NumSalon = NumSalon;
+	next();
+});
 
-router.get(
-	"/",
-	(HomeController = (req, res) => {
-		res.render("home.ejs");
-	})
-);
+router.get("/", HomeControGet);
+router.post("/", HomeControPost);
 
-router.get(
-	"/salon",
-	(SalonController = (req, res) => {
-		let NumSalon = req.params.id;
-		res.render("salon.ejs", { NumSalon });
-	})
-);
-
-// router.get("/page2", function (req, res) {
-// 	res.send("ici la future page2");
-// });
-
-// router.get("/page3", function (req, res) {
-// 	res.send("ici la future page3");
-// });
+router.get("/salon/:id", SalonController);
 
 module.exports = router;
