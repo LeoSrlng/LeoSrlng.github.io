@@ -8,11 +8,18 @@ var formLogin = document.getElementById("formLogin");
 var inputLogin = document.getElementById("inputLogin");
 var hidderBody = document.getElementById("hidderBody");
 
-// const scrollToBottom = () => {
-// 	if (window.scrollTop() + window.height() + 2 * messages.childNodes.last().outerHeight() >= document.height()) {
-// 		hidderBody.animate({ scrollTop: document.height() }, 0);
-// 	}
-// };  ////////////////////////////TODO////////////////////////////////////
+const scrollToBottom = () => {
+	let lastLi = messages.lastChild;
+	// console.log(window.scrollY);
+	// console.log(window.innerHeight);
+	// console.log(lastLi.offsetHeight);
+	console.log(window.scrollY + window.innerHeight + lastLi.offsetHeight);
+	console.log(document.body.offsetHeight);
+	if (window.scrollY + window.innerHeight + lastLi.offsetHeight >= document.body.offsetHeight) {
+		window.scrollTo(0, document.body.scrollHeight);
+		console.log("reussi");
+	}
+};
 
 formLogin.addEventListener("submit", (e) => {
 	e.preventDefault();
@@ -55,7 +62,8 @@ socket.on("chat message", (msg) => {
 	messages.appendChild(resContainer);
 	resContainer.appendChild(result);
 
-	window.scrollTo(0, document.body.scrollHeight);
+	// window.scrollTo(0, document.body.scrollHeight);
+	scrollToBottom();
 });
 
 socket.on("service-message", (msg) => {
@@ -71,4 +79,5 @@ socket.on("service-message", (msg) => {
 	resContainer.appendChild(reponse);
 	messages.appendChild(resContainer);
 	console.log(messages);
+	scrollToBottom();
 });
