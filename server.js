@@ -11,35 +11,61 @@ app.use("/", router);
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
-	console.log("Un utilisateur vient de se connecter");
+	console.log("Un utilisateur débarque");
 	let loggedUser;
+	let users = [];
 
-	socket.on("user-login", (user) => {
-		loggedUser = user;
-		if (loggedUser !== undefined) {
-			let serviceMessage = {
-				text: loggedUser.username + " c'est connecter",
+	socket.on("user-login", (user, callback) => {
+		let userIndex = -1;
+		for (i = 0; i < users.length; i++) {
+			if (users[i].username === user.username) {
+				userIndex = i;
+			}
+		}
+		if (user !== undefined && userIndex === -1) {
+			loggedUser = user;
+			users = [...users, loggedUser];
+			console.log(users);
+			let userServiceMessage = {
+				text: loggedUser.username + " s'est connecté",
 				type: "login",
 			};
-			socket.broadcast.emit("service-message", serviceMessage);
-			console.log(loggedUser.username + " c'est connecter");
+			let broadcastedServiceMessage = {
+				text: loggedUser.username + " s'est connecté",
+				type: "login",
+			};
+			socket.emit("service-message", userServiceMessage);
+			socket.broadcast.emit("service-message", broadcastedServiceMessage);
+			console.log(users);
+			for (ii = 0; ii < users.length; ii++) {
+				io.emit("user-login", users[ii]);
+			}
+			callback(true);
+		} else {
+			callback(false);
 		}
+		console.log(loggedUser.username + " s'est connecter");
 	});
 
 	socket.on("chat message", (msg) => {
 		msg.username = loggedUser.username;
 		io.emit("chat message", msg);
-		console.log(loggedUser.username + " dit: " + msg.text);
+		console.log(users);
 	});
 
 	socket.on("disconnect", () => {
 		if (loggedUser !== undefined) {
 			let serviceMessage = {
-				text: loggedUser.username + " c'est déconnecter",
+				text: loggedUser.username + " s'est déconnecter",
 				type: "logout",
 			};
 			socket.broadcast.emit("service-message", serviceMessage);
-			console.log(loggedUser.username + " c'est déconnecter");
+			let userIndex = users.indexOf(loggedUser);
+			if (userIndex !== -1) {
+				users.splice(userIndex, 1);
+			}
+			io.emit("user-logout", loggedUser);
+			console.log(loggedUser.username + " s'est déconnecter");
 		}
 	});
 });

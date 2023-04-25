@@ -8,18 +8,19 @@
 
     <body id="hidderBody" class="logged-out">
         <a href="/">Page d'acceuil</a>
-        <section id="Chat">
-            <ul id="messages"></ul>
-            <form id="formChat" method="get">
-                <input id="inputChat" />
-                <button>Send</button>
-            </form>
-        </section>
         <section id="Login">
             <form id="formLogin" action="">
                 <label for="inputLogin">Username</label>
                 <input id="inputLogin" autofocus />
                 <button>Login</button>
+            </form>
+        </section>
+        <section id="Chat">
+            <ul id="messages"></ul>
+            <ul id="users"></ul>
+            <form id="formChat" method="get">
+                <input id="inputChat" />
+                <button>Send</button>
             </form>
         </section>
         <script src="/socket.io/socket.io.js"></script>

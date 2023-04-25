@@ -1,23 +1,18 @@
-var socket = io();
+const socket = io();
 
-var messages = document.getElementById("messages");
-var formChat = document.getElementById("formChat");
-var inputChat = document.getElementById("inputChat");
+const messages = document.getElementById("messages");
+const formChat = document.getElementById("formChat");
+const inputChat = document.getElementById("inputChat");
 
-var formLogin = document.getElementById("formLogin");
-var inputLogin = document.getElementById("inputLogin");
-var hidderBody = document.getElementById("hidderBody");
+const formLogin = document.getElementById("formLogin");
+const inputLogin = document.getElementById("inputLogin");
+const hidderBody = document.getElementById("hidderBody");
+const users = document.getElementById("users");
 
 const scrollToBottom = () => {
 	let lastLi = messages.lastChild;
-	// console.log(window.scrollY);
-	// console.log(window.innerHeight);
-	// console.log(lastLi.offsetHeight);
-	console.log(window.scrollY + window.innerHeight + lastLi.offsetHeight);
-	console.log(document.body.offsetHeight);
 	if (window.scrollY + window.innerHeight + lastLi.offsetHeight >= document.body.offsetHeight) {
 		window.scrollTo(0, document.body.scrollHeight);
-		console.log("reussi");
 	}
 };
 
@@ -26,11 +21,14 @@ formLogin.addEventListener("submit", (e) => {
 	let user = {
 		username: inputLogin.value.trim(),
 	};
-	if (user.username.length !== 0) {
-		socket.emit("user-login", user);
-		inputLogin.value = "";
-		hidderBody.removeAttribute("class");
-		inputChat.focus();
+	if (user.username.length > 0) {
+		socket.emit("user-login", user, (success) => {
+			if (success) {
+				inputLogin.value = "";
+				hidderBody.removeAttribute("class");
+				inputChat.focus();
+			}
+		});
 	}
 });
 
@@ -62,22 +60,38 @@ socket.on("chat message", (msg) => {
 	messages.appendChild(resContainer);
 	resContainer.appendChild(result);
 
-	// window.scrollTo(0, document.body.scrollHeight);
 	scrollToBottom();
 });
 
 socket.on("service-message", (msg) => {
 	let resContainer = document.createElement("li");
 	resContainer.className = msg.type;
-	console.log(resContainer);
 
 	let reponse = document.createElement("span");
 	reponse.className = "info";
 	reponse.textContent = msg.text;
-	console.log(reponse);
 
 	resContainer.appendChild(reponse);
 	messages.appendChild(resContainer);
-	console.log(messages);
+
 	scrollToBottom();
+});
+
+socket.on("user-login", (user) => {
+	let aUser = document.createElement("li");
+	aUser.className = user.username + " new";
+	aUser.textContent = user.username;
+	users.appendChild(aUser);
+	console.log(user);
+
+	setTimeout(() => {
+		if (aUser.classList.contains("new")) {
+			aUser.classList.remove("new");
+		}
+	}, 1250);
+});
+
+socket.on("user-logout", (user) => {
+	let selector = document.querySelector("li." + user.username);
+	selector.remove();
 });
