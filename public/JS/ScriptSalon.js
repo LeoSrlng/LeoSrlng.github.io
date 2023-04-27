@@ -1,13 +1,15 @@
 const socket = io();
 
+const hidderBody = document.getElementById("hidderBody");
+
 const messages = document.getElementById("messages");
 const formChat = document.getElementById("formChat");
 const inputChat = document.getElementById("inputChat");
+const users = document.getElementById("users");
 
 const formLogin = document.getElementById("formLogin");
 const inputLogin = document.getElementById("inputLogin");
-const hidderBody = document.getElementById("hidderBody");
-const users = document.getElementById("users");
+const loginPage = document.getElementById("Login");
 
 const scrollToBottom = () => {
 	let lastLi = messages.lastChild;
@@ -77,18 +79,32 @@ socket.on("service-message", (msg) => {
 	scrollToBottom();
 });
 
+socket.on("err-log", (err) => {
+	let reponse = document.createElement("p");
+	reponse.className = "err-msg";
+	reponse.textContent = err;
+
+	loginPage.appendChild(reponse);
+
+	scrollToBottom();
+});
+
 socket.on("user-login", (user) => {
+	let nbrUser = users.childNodes.length;
 	let aUser = document.createElement("li");
 	aUser.className = user.username + " new";
 	aUser.textContent = user.username;
 	users.appendChild(aUser);
-	console.log(user);
 
 	setTimeout(() => {
 		if (aUser.classList.contains("new")) {
 			aUser.classList.remove("new");
 		}
 	}, 1250);
+	if (users.firstChild.className.includes(user.username) && nbrUser > 0) {
+		let selector = document.querySelector("li." + user.username);
+		selector.remove();
+	}
 });
 
 socket.on("user-logout", (user) => {
